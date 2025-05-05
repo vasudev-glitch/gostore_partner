@@ -1,0 +1,20 @@
+name: device_info_plus_windows
+description: Windows implementation of the device_info_plus plugin.
+version: 5.0.0
+publish_to: none
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  device_info_plus_platform_interface: ^5.0.0
+
+flutter:
+  plugin:
+    implements: device_info_plus
+    platforms:
+      windows:
+        pluginClass: DeviceInfoPlusWindowsPlugin
+        fileName: device_info_plus_windows.dart

@@ -1,0 +1,19 @@
+name: flutter_plugin_android_lifecycle
+description: A local override for flutter_plugin_android_lifecycle
+version: 2.0.0
+publish_to: "none"
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: io.flutter.plugins.flutter_plugin_android_lifecycle
+        pluginClass: FlutterAndroidLifecyclePlugin
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.13.0"
+
+dependencies:
+  flutter:
+    sdk: flutter

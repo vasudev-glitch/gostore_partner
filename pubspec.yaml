@@ -1,0 +1,74 @@
+name: gostore_partner
+description: GoStore Admin Panel
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.6.1 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # ✅ Fonts & UI
+  google_fonts: ^6.2.1
+  flutter_svg: ^2.0.9
+  cached_network_image: ^3.3.1
+  fl_chart: ^0.70.2
+  intl: ^0.20.2
+
+  # ✅ Firebase & Admin Control
+  firebase_core: ^3.13.0
+  firebase_auth: ^5.5.2
+  cloud_firestore: ^5.6.6
+  firebase_storage: ^12.4.5
+  firebase_messaging: ^15.2.5
+  flutter_local_notifications: ^19.0.0
+  google_sign_in: ^5.4.4
+
+  # ✅ File Export Tools
+  pdf: ^3.11.3
+  printing: ^5.14.2
+  csv: ^6.0.0
+  path_provider: ^2.1.5
+  vibration: ^3.1.3
+
+  # ✅ Device Info for Fraud & Analytics
+  device_info_plus_platform_interface: ^5.0.0
+
+  # ✅ Splash screen
+  flutter_native_splash: ^2.4.6
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+
+flutter:
+  uses-material-design: true
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: https://i.ibb.co/pdH9PLD/gostore-logo.png
+  android: true
+  ios: true
+  fullscreen: true
+
+dependency_overrides:
+  cupertino_icons:
+    path: local_plugins/cupertino_icons
+  flutter_plugin_android_lifecycle:
+    path: local_plugins/flutter_plugin_android_lifecycle
+  qr_code_scanner:
+    path: local_plugins/qr_code_scanner
+  google_sign_in_android:
+    path: local_plugins/google_sign_in
+  local_auth_android:
+    path: local_plugins/local_auth
+  device_info_plus:
+    path: local_plugins/device_info_plus
+  device_info_plus_web:
+    path: local_plugins/device_info_plus_web
+  device_info_plus_windows:
+    path: local_plugins/device_info_plus_windows

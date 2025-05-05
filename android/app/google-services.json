@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "807960477424",
+    "project_id": "gostore-aad67",
+    "storage_bucket": "gostore-aad67.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:807960477424:android:8b8b9f64b5999ca5054c35",
+        "android_client_info": {
+          "package_name": "com.example.gostore"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "807960477424-nmj48cgl0991q1u9b7ot37alldjqjo46.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.gostore",
+            "certificate_hash": "6b15d6a850d744cd1634697c2a2c30b20bfc6457"
+          }
+        },
+        {
+          "client_id": "807960477424-utr9u7v6f9ckf6spqq9vtujaljk5losf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChdXzY_u8K9yerPf63MmtPPiGxmU6ef5I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "807960477424-utr9u7v6f9ckf6spqq9vtujaljk5losf.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "807960477424-4dmarmgh3iqm2unrkoik41aoajt2nbm2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.gostore.gostore"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
