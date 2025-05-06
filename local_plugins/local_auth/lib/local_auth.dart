@@ -1,10 +1,12 @@
 library local_auth;
 
+// ✅ Export types so your app can access them directly
 export 'src/types/biometric_type.dart';
 export 'src/types/auth_messages.dart';
 export 'src/types/authentication_options.dart';
+export 'src/types/method_channel_local_auth.dart';
 
-import 'src//types/method_channel_local_auth.dart';
+import 'src/types/method_channel_local_auth.dart';
 import 'src/types/authentication_options.dart';
 import 'src/types/auth_messages.dart';
 import 'src/types/biometric_type.dart';

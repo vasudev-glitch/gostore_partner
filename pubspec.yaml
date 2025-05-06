@@ -67,7 +67,7 @@ dependency_overrides:
     path: local_plugins/qr_code_scanner
   google_sign_in_android:
     path: local_plugins/google_sign_in
-  local_auth_android:
+  local_auth:
     path: local_plugins/local_auth
   device_info_plus:
     path: local_plugins/device_info_plus

@@ -1,4 +1,4 @@
-package io.flutter.plugins.localauth
+package io.flutter.plugins.local_auth
 
 import android.app.Activity
 import android.content.Context
@@ -24,7 +24,7 @@ class LocalAuthPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, Activity
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         context = binding.applicationContext
-        channel = MethodChannel(binding.binaryMessenger, "local_auth_android")
+        channel = MethodChannel(binding.binaryMessenger, "local_auth")
         channel.setMethodCallHandler(this)
         executor = ContextCompat.getMainExecutor(context!!)
     }

@@ -14,7 +14,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.example.qrcodescanner
+        package: dev.steenbakker.qr_code_scanner
         pluginClass: QrCodeScannerPlugin
       ios:
         pluginClass: QrCodeScannerPlugin

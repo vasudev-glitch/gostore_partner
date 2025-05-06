@@ -1,14 +1,15 @@
 import 'package:flutter/services.dart';
-import 'package:local_plugins/local_auth/lib/src/types/auth_messages.dart';
-import 'package:local_plugins/local_auth/lib/src/types/biometric_type.dart';
-import 'package:local_plugins/local_auth/lib/src/types/authentication_options.dart';
+import 'authentication_options.dart';
+import 'auth_messages.dart';
+import 'biometric_type.dart';
 
 class MethodChannelLocalAuth {
   static const MethodChannel _channel = MethodChannel('local_auth');
 
+  /// Triggers biometric authentication with provided options
   Future<bool> authenticate({
     required String localizedReason,
-    required Iterable<AuthMessages> authMessages,
+    required List<AuthMessages> authMessages,
     required AuthenticationOptions options,
   }) async {
     final result = await _channel.invokeMethod('authenticateWithBiometrics', {
@@ -22,11 +23,13 @@ class MethodChannelLocalAuth {
     return result as bool;
   }
 
+  /// Returns available biometric types (e.g., fingerprint, face)
   Future<List<BiometricType>> getAvailableBiometrics() async {
     final List<dynamic> result = await _channel.invokeMethod('getAvailableBiometrics');
     return result.map((e) => BiometricType.values.byName(e)).toList();
   }
 
+  /// Stops any ongoing biometric authentication session
   Future<bool> stopAuthentication() async {
     final result = await _channel.invokeMethod('stopAuthentication');
     return result as bool;

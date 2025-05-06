@@ -7,8 +7,8 @@ import 'package:gostore_partner/screens/admin_dashboard.dart';
 import 'package:gostore_partner/screens/qr_scanner_screen.dart';
 import 'package:gostore_partner/screens/admin_invite_signup_screen.dart';
 import 'package:gostore_partner/utils/ui_config.dart';
-import 'package:local_auth/local_auth.dart'; // ✅ From your local override
-import 'package:local_auth/src/types/authentication_options.dart'; // ✅ From your local override
+import 'package:local_auth/local_auth.dart';
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

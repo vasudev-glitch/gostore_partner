@@ -1,1 +1,1 @@
-rootProject.name = 'local_auth_android'
+rootProject.name = 'local_auth'

@@ -1,6 +1,6 @@
 val kotlinVersion = "1.9.22"
 
-group = "io.flutter.plugins.localauth"
+group = "io.flutter.plugins.local_auth"
 version = "1.0"
 
 buildscript {
@@ -20,7 +20,7 @@ plugins {
 }
 
 android {
-    namespace = "io.flutter.plugins.localauth"
+    namespace = "io.flutter.plugins.local_auth"
     compileSdk = 35
 
     defaultConfig {

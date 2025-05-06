@@ -1,12 +1,12 @@
-name: local_auth_android
-description: Local override of local_auth_android plugin
+name: local_auth
+description: Local override of compileSdk = 35 plugin
 version: 1.0.0
 
 flutter:
   plugin:
     platforms:
       android:
-        package: io.flutter.plugins.localauth
+        package: io.flutter.plugins.local_auth
         pluginClass: LocalAuthPlugin
 
 environment:
