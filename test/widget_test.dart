@@ -4,16 +4,24 @@ import 'package:gostore_partner/main.dart';
 
 void main() {
   testWidgets('renders splash screen and eventually login', (WidgetTester tester) async {
-    await tester.pumpWidget(const MyApp());
+    // Provide a fallback theme for testing
+    final dummyTheme = ThemeData(
+      brightness: Brightness.light,
+      useMaterial3: true,
+    );
 
-    // Splash screen should show logo or loading indicator
+    await tester.pumpWidget(
+      MyApp(themeData: dummyTheme), // ⬅️ Removed const here
+    );
+
+    // Splash screen check
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
 
-    // Wait for navigation (simulate 3 seconds delay in SplashScreen)
+    // Simulate splash delay
     await tester.pump(const Duration(seconds: 3));
     await tester.pumpAndSettle();
 
-    // After splash, we should land on login screen
+    // Confirm login is present
     expect(find.text('Login'), findsWidgets);
   });
 }

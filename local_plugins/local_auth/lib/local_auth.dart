@@ -1,38 +1,44 @@
-import 'package:flutter/services.dart';
+library local_auth;
+
+export 'src/types/biometric_type.dart';
+export 'src/types/auth_messages.dart';
+export 'src/types/authentication_options.dart';
+
+import 'src//types/method_channel_local_auth.dart';
+import 'src/types/authentication_options.dart';
 import 'src/types/auth_messages.dart';
 import 'src/types/biometric_type.dart';
-import 'src/types/authentication_options.dart';
 
-class MethodChannelLocalAuth {
-  static const MethodChannel _channel = MethodChannel('local_auth');
+/// ✅ Public API used in your app
+class LocalAuthentication {
+  final _auth = MethodChannelLocalAuth();
 
-  static void registerWith() {
-    // Register manually if needed, depending on your platform implementation
-  }
-
+  /// Starts biometric authentication with options
   Future<bool> authenticate({
     required String localizedReason,
-    required Iterable<AuthMessages> authMessages,
-    required AuthenticationOptions options,
-  }) async {
-    final result = await _channel.invokeMethod('authenticateWithBiometrics', {
-      'localizedReason': localizedReason,
-      'useErrorDialogs': options.useErrorDialogs,
-      'stickyAuth': options.stickyAuth,
-      'sensitiveTransaction': options.sensitiveTransaction,
-      'biometricOnly': options.biometricOnly, // ✅ added
-    });
-
-    return result as bool;
+    List<AuthMessages> authMessages = const <AuthMessages>[],
+    AuthenticationOptions options = const AuthenticationOptions(),
+  }) {
+    return _auth.authenticate(
+      localizedReason: localizedReason,
+      authMessages: authMessages,
+      options: options,
+    );
   }
 
-  Future<List<BiometricType>> getAvailableBiometrics() async {
-    final List<dynamic> result = await _channel.invokeMethod('getAvailableBiometrics');
-    return result.map((e) => BiometricType.values.byName(e)).toList();
+  /// Checks available biometric types (Face ID, Fingerprint)
+  Future<List<BiometricType>> getAvailableBiometrics() {
+    return _auth.getAvailableBiometrics();
   }
 
-  Future<bool> stopAuthentication() async {
-    final result = await _channel.invokeMethod('stopAuthentication');
-    return result as bool;
+  /// Cancels any ongoing biometric prompt
+  Future<bool> stopAuthentication() {
+    return _auth.stopAuthentication();
+  }
+
+  /// Whether device supports any biometric methods
+  Future<bool> get canCheckBiometrics async {
+    final biometrics = await getAvailableBiometrics();
+    return biometrics.isNotEmpty;
   }
 }

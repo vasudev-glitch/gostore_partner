@@ -17,7 +17,7 @@ class SplashScreenState extends State<SplashScreen> {
     Future.delayed(const Duration(seconds: 3), () {
       if (!mounted) return;
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const AuthCheck()),
+        MaterialPageRoute(builder: (_) => const AuthCheck()),
       );
     });
   }
@@ -26,11 +26,12 @@ class SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
+        fit: StackFit.expand,
         children: [
-          Container(
-            decoration: const BoxDecoration(
+          const DecoratedBox(
+            decoration: BoxDecoration(
               image: DecorationImage(
-                image: NetworkImage("https://i.ibb.co/FK6Rfqs/admin-bg.jpg"), // Replace with your preferred online background if needed
+                image: NetworkImage("https://i.ibb.co/FK6Rfqs/admin-bg.jpg"),
                 fit: BoxFit.cover,
               ),
             ),
@@ -42,6 +43,7 @@ class SplashScreenState extends State<SplashScreen> {
                 Image.network(
                   "https://i.ibb.co/pdH9PLD/gostore-logo.png",
                   width: 180,
+                  errorBuilder: (_, __, ___) => Icon(Icons.store, size: 100, color: Theme.of(context).colorScheme.primary),
                 ),
                 const SizedBox(height: 20),
                 const CircularProgressIndicator(color: Colors.white),
@@ -63,9 +65,11 @@ class AuthCheck extends StatelessWidget {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(body: Center(child: CircularProgressIndicator()));
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
         } else if (snapshot.hasData) {
-          return const AdminDashboard(); // 🔥 Always admin
+          return const AdminDashboard(); // 🔐 Admin by default
         } else {
           return const LoginScreen();
         }

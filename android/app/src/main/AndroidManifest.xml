@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.gostore"
+    package="com.example.gostore_partner"
     xmlns:tools="http://schemas.android.com/tools">
 
     <!-- 🔐 Permissions -->
@@ -13,7 +13,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
-        android:label="gostore"
+        android:label="gostore_Partner"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         tools:replace="android:label">

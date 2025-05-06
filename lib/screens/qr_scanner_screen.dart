@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gostore_partner/local_plugins/qr_code_scanner/lib/qr_code_scanner.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QRScannerScreen extends StatefulWidget {
   final bool forAdminInvite;

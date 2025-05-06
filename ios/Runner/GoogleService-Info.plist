@@ -3,9 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>807960477424-h03ao3bi7oi3m56334bca7gfmdb38k8m.apps.googleusercontent.com</string>
+	<string>807960477424-n4e6jsm8n9s4v5elso8brma5e55o19i8.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.807960477424-h03ao3bi7oi3m56334bca7gfmdb38k8m</string>
+	<string>com.googleusercontent.apps.807960477424-n4e6jsm8n9s4v5elso8brma5e55o19i8</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>807960477424-4fbr89r7385515dtbfoccjq7l1qesjrf.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyBX3ZjvxldgbBJqnu0eJvqjoCTow1cpjaM</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.gostore</string>
+	<string>com.example.gostore-partner</string>
 	<key>PROJECT_ID</key>
 	<string>gostore-aad67</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:807960477424:ios:9f58369f172c9c78054c35</string>
+	<string>1:807960477424:ios:a5733d158805641c054c35</string>
 </dict>
 </plist>
