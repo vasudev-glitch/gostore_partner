@@ -1,44 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 
 class QRScannerScreen extends StatefulWidget {
   final bool forAdminInvite;
   const QRScannerScreen({super.key, this.forAdminInvite = false});
 
   @override
-  QRScannerScreenState createState() => QRScannerScreenState();
+  State<QRScannerScreen> createState() => _QRScannerScreenState();
 }
 
-class QRScannerScreenState extends State<QRScannerScreen> {
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  QRViewController? controller;
+class _QRScannerScreenState extends State<QRScannerScreen> {
   bool isProcessing = false;
 
-  @override
-  void dispose() {
-    controller?.dispose();
-    super.dispose();
-  }
+  void _handleScan(String code) async {
+    if (isProcessing) return;
+    isProcessing = true;
 
-  void _onQRViewCreated(QRViewController ctrl) {
-    controller = ctrl;
-    ctrl.scannedDataStream.listen((scanData) async {
-      if (isProcessing) return;
-      isProcessing = true;
-
-      final scannedValue = scanData.code ?? "";
-      final navigator = Navigator.of(context);
-
-      if (widget.forAdminInvite && scannedValue.isNotEmpty) {
-        navigator.pop(scannedValue);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Invalid QR code")),
-        );
-        await Future.delayed(const Duration(seconds: 2));
-        isProcessing = false;
-      }
-    });
+    if (widget.forAdminInvite && code.isNotEmpty) {
+      Navigator.pop(context, code);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Invalid QR code")),
+      );
+      await Future.delayed(const Duration(seconds: 2));
+      isProcessing = false;
+    }
   }
 
   @override
@@ -51,9 +37,13 @@ class QRScannerScreenState extends State<QRScannerScreen> {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: QRView(
-        key: qrKey,
-        onQRViewCreated: _onQRViewCreated,
+      body: MobileScanner(
+        fit: BoxFit.cover,
+        controller: MobileScannerController(),
+        onDetect: (capture) {
+          final code = capture.barcodes.first.rawValue;
+          if (code != null) _handleScan(code);
+        },
       ),
     );
   }

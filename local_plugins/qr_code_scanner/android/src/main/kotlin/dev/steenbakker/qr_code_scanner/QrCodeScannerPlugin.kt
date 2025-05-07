@@ -1,4 +1,4 @@
-package com.example.qrcodescanner
+package dev.steenbakker.qr_code_scanner
 
 import android.app.Activity
 import android.content.Context
