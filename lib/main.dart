@@ -3,10 +3,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'package:gostore_partner/firebase_options.dart';
-import 'package:gostore_partner/screens/splash_screen.dart';
-import 'package:gostore_partner/screens/login_screen.dart';
-import 'package:gostore_partner/screens/profile_screen.dart';
+import 'firebase_options.dart';
+import 'screens/splash_screen.dart';
+import 'screens/login_screen.dart';
+import 'screens/profile_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,47 +41,50 @@ class MyApp extends StatelessWidget {
 }
 
 Future<ThemeData> loadRemoteTheme() async {
-  final doc = await FirebaseFirestore.instance.collection("themes").doc("default").get();
-  final data = doc.data();
+  try {
+    final doc = await FirebaseFirestore.instance.collection("themes").doc("default").get();
+    final data = doc.data();
 
-  if (data == null) {
-    return ThemeData.light();
-  }
+    if (data == null) return ThemeData.light();
 
-  final isDark = data['brightness'] == 'dark';
+    final isDark = data['brightness'] == 'dark';
 
-  return ThemeData(
-    brightness: isDark ? Brightness.dark : Brightness.light,
-    useMaterial3: true,
-    scaffoldBackgroundColor: HexColor(data['backgroundColor'] ?? "#FFFFFF"),
-    colorScheme: ColorScheme.fromSeed(seedColor: HexColor(data['primaryColor'] ?? "#0A2540")),
-    appBarTheme: AppBarTheme(
-      backgroundColor: HexColor(data['appBarColor'] ?? "#0A2540"),
-      foregroundColor: Colors.white,
-      titleTextStyle: GoogleFonts.getFont(
-        data['fontFamily'] ?? 'Poppins',
-        fontSize: 22,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-      ),
-    ),
-    textTheme: TextTheme(
-      bodyLarge: GoogleFonts.getFont(data['fontFamily'] ?? 'Poppins', fontSize: 14),
-      bodyMedium: GoogleFonts.getFont(data['fontFamily'] ?? 'Poppins', fontSize: 14),
-      labelLarge: GoogleFonts.getFont(data['fontFamily'] ?? 'Poppins', fontSize: 16, fontWeight: FontWeight.w600),
-    ),
-    elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: HexColor(data['buttonColor'] ?? "#01E0AC"),
-        foregroundColor: HexColor(data['buttonTextColor'] ?? "#000000"),
-        textStyle: GoogleFonts.getFont(data['fontFamily'] ?? 'Poppins', fontSize: 16, fontWeight: FontWeight.w600),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+    return ThemeData(
+      brightness: isDark ? Brightness.dark : Brightness.light,
+      useMaterial3: true,
+      scaffoldBackgroundColor: HexColor(data['backgroundColor'] ?? "#FFFFFF"),
+      colorScheme: ColorScheme.fromSeed(seedColor: HexColor(data['primaryColor'] ?? "#0A2540")),
+      appBarTheme: AppBarTheme(
+        backgroundColor: HexColor(data['appBarColor'] ?? "#0A2540"),
+        foregroundColor: Colors.white,
+        titleTextStyle: GoogleFonts.getFont(
+          data['fontFamily'] ?? 'Poppins',
+          fontSize: 22,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
         ),
       ),
-    ),
-  );
+      textTheme: TextTheme(
+        bodyLarge: GoogleFonts.getFont(data['fontFamily'] ?? 'Poppins', fontSize: 14),
+        bodyMedium: GoogleFonts.getFont(data['fontFamily'] ?? 'Poppins', fontSize: 14),
+        labelLarge: GoogleFonts.getFont(data['fontFamily'] ?? 'Poppins', fontSize: 16, fontWeight: FontWeight.w600),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: HexColor(data['buttonColor'] ?? "#01E0AC"),
+          foregroundColor: HexColor(data['buttonTextColor'] ?? "#000000"),
+          textStyle: GoogleFonts.getFont(data['fontFamily'] ?? 'Poppins', fontSize: 16, fontWeight: FontWeight.w600),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      ),
+    );
+  } catch (e) {
+    debugPrint("⚠️ Theme load failed: $e");
+    return ThemeData.light();
+  }
 }
 
 class HexColor extends Color {

@@ -1,4 +1,4 @@
-package com.example.gostore
+package com.example.gostore_partner
 
 import android.os.Bundle
 import io.flutter.embedding.android.FlutterFragmentActivity

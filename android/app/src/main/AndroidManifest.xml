@@ -13,7 +13,7 @@
 
     <application
         android:name="${applicationName}"
-        android:label="gostore_Partner"
+        android:label="gostore_partner"
         android:icon="@mipmap/ic_launcher"
         tools:replace="android:label">
 

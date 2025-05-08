@@ -6,12 +6,12 @@ plugins {
 }
 
 android {
-    namespace = "com.example.gostore"
+    namespace = "com.example.gostore_partner"
     compileSdk = 35
     ndkVersion = "27.0.12077973" // ✅ Firebase/MLKit required
 
     defaultConfig {
-        applicationId = "com.example.gostore"
+        applicationId = "com.example.gostore_partner"
         minSdk = 23
         targetSdk = 34
         versionCode = 1
