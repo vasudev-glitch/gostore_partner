@@ -9,7 +9,7 @@ class AppSize {
   static double screenHeight(BuildContext context) => MediaQuery.of(context).size.height;
 }
 
-/// ✅ App-wide Text Styles
+/// ✅ Core Text Styles (used inside AppTextStyle)
 class AppTextStyles {
   static TextStyle appBar = GoogleFonts.poppins(
     fontSize: 20,
@@ -29,33 +29,54 @@ class AppTextStyles {
   );
 }
 
-/// ✅ Unified TextStyle Accessors (used by admin widgets)
+/// ✅ Theme-aware Text Style Wrappers
 class AppTextStyle {
-  static TextStyle headingLarge(BuildContext context) => AppTextStyles.sectionTitle;
-  static TextStyle body(BuildContext context) => Theme.of(context).textTheme.bodyMedium!;
-  static TextStyle caption(BuildContext context) => Theme.of(context).textTheme.labelSmall!;
+  static TextStyle headingLarge(BuildContext context) =>
+      AppTextStyles.sectionTitle.copyWith(color: Theme.of(context).colorScheme.onSurface);
+
+  static TextStyle headingMedium(BuildContext context) =>
+      GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface);
+
+  static TextStyle body(BuildContext context) => GoogleFonts.poppins(
+    fontSize: 14,
+    color: Theme.of(context).textTheme.bodyMedium?.color,
+  );
+
+  static TextStyle caption(BuildContext context) => GoogleFonts.poppins(
+    fontSize: 12,
+    color: Theme.of(context).hintColor,
+  );
+
+  static TextStyle badge(BuildContext context) => GoogleFonts.poppins(
+    fontSize: 10,
+    fontWeight: FontWeight.bold,
+    color: Theme.of(context).colorScheme.onPrimary,
+  );
 }
 
-/// ✅ Padding Constants
+/// ✅ Padding & Spacing Constants
 class AppPaddings {
   static const EdgeInsets screen = EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0);
+  static const EdgeInsets card = EdgeInsets.all(16.0);
 }
 
-/// ✅ Spacing Constants
 class AppSpacing {
+  static const double xs = 4.0;
   static const double sm = 8.0;
   static const double md = 16.0;
   static const double lg = 24.0;
+  static const double xl = 32.0;
 }
 
-/// ✅ Border Radius Constants
+/// ✅ Rounded Corner Radii
 class AppRadius {
   static const double sm = 8.0;
   static const double md = 12.0;
   static const double lg = 20.0;
+  static const BorderRadius card = BorderRadius.all(Radius.circular(16));
 }
 
-/// ✅ Button Styles
+/// ✅ Button Styles (Material 3 Compliant)
 class AppButtonStyles {
   static final ButtonStyle primary = ElevatedButton.styleFrom(
     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
@@ -63,19 +84,21 @@ class AppButtonStyles {
     foregroundColor: Colors.white,
     textStyle: AppTextStyles.button,
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(AppRadius.md),
     ),
+    elevation: 3,
   );
 
   static final ButtonStyle secondary = ElevatedButton.styleFrom(
     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
     backgroundColor: Colors.white,
-    foregroundColor: Colors.black,
+    foregroundColor: Colors.black87,
     textStyle: AppTextStyles.button,
     side: const BorderSide(color: Colors.black54),
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(AppRadius.md),
     ),
+    elevation: 1,
   );
 
   static final ButtonStyle large = ElevatedButton.styleFrom(
@@ -84,7 +107,23 @@ class AppButtonStyles {
     foregroundColor: Colors.white,
     textStyle: AppTextStyles.button.copyWith(fontSize: 18),
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(AppRadius.lg),
     ),
+    elevation: 4,
+  );
+}
+
+/// ✅ Card Decorations
+class AppDecorations {
+  static BoxDecoration elevatedCard(BuildContext context) => BoxDecoration(
+    color: Theme.of(context).cardColor,
+    borderRadius: AppRadius.card,
+    boxShadow: [
+      BoxShadow(
+        color: Colors.black.withOpacity(0.08),
+        blurRadius: 12,
+        offset: const Offset(0, 4),
+      ),
+    ],
   );
 }

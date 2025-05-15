@@ -1,42 +1,62 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class LiveAlertButton extends StatefulWidget {
+class LiveAlertButton extends StatelessWidget {
   final VoidCallback onPressed;
-  const LiveAlertButton({super.key, required this.onPressed});
+  final bool showBadge;
 
-  @override
-  State<LiveAlertButton> createState() => _LiveAlertButtonState();
-}
-
-class _LiveAlertButtonState extends State<LiveAlertButton>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-
-  @override
-  void initState() {
-    _controller = AnimationController(
-      duration: const Duration(seconds: 1),
-      vsync: this,
-    )..repeat(reverse: true);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+  const LiveAlertButton({
+    super.key,
+    required this.onPressed,
+    this.showBadge = true, // default true
+  });
 
   @override
   Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _controller.drive(Tween(begin: 0.3, end: 1.0)),
-      child: FloatingActionButton.extended(
-        onPressed: widget.onPressed,
-        label: const Text("LIVE"),
-        icon: const Icon(Icons.bolt),
-        backgroundColor: Colors.red,
-      ),
+    return showBadge
+        ? StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('fraud_logs')
+          .where('resolved', isEqualTo: false)
+          .snapshots(),
+      builder: (context, snapshot) {
+        final count = snapshot.data?.docs.length ?? 0;
+        return Stack(
+          clipBehavior: Clip.none,
+          children: [
+            FloatingActionButton(
+              onPressed: onPressed,
+              backgroundColor: Colors.redAccent,
+              child: const Icon(Icons.warning_amber),
+            ),
+            if (count > 0)
+              Positioned(
+                right: -2,
+                top: -2,
+                child: Container(
+                  padding: const EdgeInsets.all(5),
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.yellow,
+                  ),
+                  child: Text(
+                    "$count",
+                    style: const TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        );
+      },
+    )
+        : FloatingActionButton(
+      onPressed: onPressed,
+      backgroundColor: Colors.redAccent,
+      child: const Icon(Icons.warning_amber),
     );
   }
 }

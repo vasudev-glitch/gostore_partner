@@ -1,90 +1,100 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:gostore_partner/utils/ui_config.dart'; // ✅ Centralized UI config
+import 'package:gostore_partner/utils/ui_config.dart';
+import 'package:gostore_partner/widgets/inventory_card.dart';
+import 'package:gostore_partner/widgets/inventory_header.dart';
+import 'package:gostore_partner/widgets/add_product_dialog.dart';
 
 class InventoryManagementScreen extends StatefulWidget {
   const InventoryManagementScreen({super.key});
 
   @override
-  InventoryManagementScreenState createState() => InventoryManagementScreenState();
+  State<InventoryManagementScreen> createState() => _InventoryManagementScreenState();
 }
 
-class InventoryManagementScreenState extends State<InventoryManagementScreen> {
+class _InventoryManagementScreenState extends State<InventoryManagementScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _priceController = TextEditingController();
-  final TextEditingController _stockController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = "";
 
-  /// **Add New Product**
-  void _addProduct() async {
-    final name = _nameController.text.trim();
-    final price = _priceController.text.trim();
-    final stock = _stockController.text.trim();
-
-    if (name.isEmpty || price.isEmpty || stock.isEmpty) {
-      _showMessage("All fields are required!");
-      return;
-    }
-
-    try {
-      await _firestore.collection("inventory").add({
-        "name": name,
-        "price": double.parse(price),
-        "stock": int.parse(stock),
-        "salesCount": 0,
-      });
-
-      _showMessage("Product Added Successfully!");
-      _nameController.clear();
-      _priceController.clear();
-      _stockController.clear();
-    } catch (e) {
-      _showMessage("Failed to add product: $e");
-    }
+  void _updateSearch(String query) {
+    setState(() {
+      _searchQuery = query.trim().toLowerCase();
+    });
   }
 
-  /// **Show Message**
-  void _showMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  void _updateStock(String productId, int currentStock) {
+    _firestore.collection('inventory').doc(productId).update({'stock': currentStock + 1});
+  }
+
+  void _decreaseStock(String productId, int currentStock) {
+    if (currentStock > 0) {
+      _firestore.collection('inventory').doc(productId).update({'stock': currentStock - 1});
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("📦 Inventory Management", style: AppTextStyle.headingLarge(context)),
+        title: Text("📦 Inventory", style: AppTextStyle.headingLarge(context)),
+        centerTitle: true,
       ),
       body: Padding(
-        padding: EdgeInsets.all(AppSpacing.lg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              controller: _nameController,
-              decoration: const InputDecoration(labelText: "Product Name"),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _priceController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: "Price"),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _stockController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: "Stock"),
-            ),
-            const SizedBox(height: 20),
-            Center(
-              child: ElevatedButton(
-                onPressed: _addProduct,
-                style: AppButtonStyles.primary,
-                child: const Text("➕ Add Product"),
-              ),
-            ),
-          ],
+        padding: AppPaddings.screen,
+        child: StreamBuilder<QuerySnapshot>(
+          stream: _firestore.collection('inventory').orderBy('name').snapshots(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
+
+            final allDocs = snapshot.data!.docs;
+            final items = allDocs.where((doc) {
+              final name = (doc['name'] as String).toLowerCase();
+              return name.contains(_searchQuery);
+            }).toList();
+
+            return Column(
+              children: [
+                InventoryHeader(
+                  totalItems: allDocs.length,
+                  searchController: _searchController,
+                  onSearch: _updateSearch,
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                items.isEmpty
+                    ? const Expanded(
+                  child: Center(child: Text("No matching products found.")),
+                )
+                    : Expanded(
+                  child: ListView.separated(
+                    itemCount: items.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.md),
+                    itemBuilder: (context, index) {
+                      final item = items[index];
+                      final name = item['name'] ?? 'Unnamed';
+                      final stock = item['stock'] ?? 0;
+
+                      return InventoryCard(
+                        name: name,
+                        stock: stock,
+                        onIncrease: () => _updateStock(item.id, stock),
+                        onDecrease: () => _decreaseStock(item.id, stock),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            );
+          },
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => showDialog(
+          context: context,
+          builder: (_) => const AddProductDialog(),
+        ),
+        tooltip: "Add Product",
+        child: const Icon(Icons.add),
       ),
     );
   }

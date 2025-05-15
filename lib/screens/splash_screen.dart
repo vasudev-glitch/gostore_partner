@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gostore_partner/screens/login_screen.dart';
-import 'package:gostore_partner/screens/admin_dashboard.dart';
+import 'package:gostore_partner/utils/ui_config.dart';
+import 'package:gostore_partner/utils/routes.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -10,20 +10,49 @@ class SplashScreen extends StatefulWidget {
   SplashScreenState createState() => SplashScreenState();
 }
 
-class SplashScreenState extends State<SplashScreen> {
+class SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 3), () {
-      if (!mounted) return;
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const AuthCheck()),
-      );
-    });
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    );
+
+    _fadeAnimation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    );
+
+    _controller.forward();
+
+    Future.delayed(const Duration(seconds: 3), _checkAuthStatus);
+  }
+
+  void _checkAuthStatus() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (!mounted) return;
+    if (user != null) {
+      AppRoutes.replace(context, AppRoutes.dashboard);
+    } else {
+      AppRoutes.replace(context, AppRoutes.login);
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,
@@ -36,44 +65,40 @@ class SplashScreenState extends State<SplashScreen> {
               ),
             ),
           ),
+          Container(
+            color: isDark
+                ? const Color.fromRGBO(0, 0, 0, 0.7)
+                : const Color.fromRGBO(255, 255, 255, 0.6),
+          ),
           Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.network(
-                  "https://i.ibb.co/pdH9PLD/gostore-logo.png",
-                  width: 180,
-                  errorBuilder: (_, __, ___) => Icon(Icons.store, size: 100, color: Theme.of(context).colorScheme.primary),
-                ),
-                const SizedBox(height: 20),
-                const CircularProgressIndicator(color: Colors.white),
-              ],
+            child: FadeTransition(
+              opacity: _fadeAnimation,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Hero(
+                    tag: "gostore-logo",
+                    child: Image.network(
+                      "https://i.ibb.co/pdH9PLD/gostore-logo.png",
+                      width: 160,
+                      errorBuilder: (_, __, ___) => Icon(
+                        Icons.store,
+                        size: 80,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  const CircularProgressIndicator(
+                    strokeWidth: 3,
+                    color: Colors.white,
+                  ),
+                ],
+              ),
             ),
           ),
         ],
       ),
-    );
-  }
-}
-
-class AuthCheck extends StatelessWidget {
-  const AuthCheck({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
-        } else if (snapshot.hasData) {
-          return const AdminDashboard(); // 🔐 Admin by default
-        } else {
-          return const LoginScreen();
-        }
-      },
     );
   }
 }

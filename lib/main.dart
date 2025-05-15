@@ -7,6 +7,9 @@ import 'firebase_options.dart';
 import 'screens/splash_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/profile_screen.dart';
+import 'screens/admin_dashboard.dart';
+import 'screens/admin_panel.dart'; // ✅ Make sure this path is correct
+import 'package:gostore_partner/utils/routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,7 +17,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  final themeData = await loadRemoteTheme(); // Load theme from Firestore
+  final themeData = await loadRemoteTheme();
   runApp(MyApp(themeData: themeData));
 }
 
@@ -31,10 +34,15 @@ class MyApp extends StatelessWidget {
       title: 'GoStore Partner',
       debugShowCheckedModeBanner: false,
       theme: themeData,
-      home: const SplashScreen(),
+      initialRoute: AppRoutes.splash,
       routes: {
-        "/login": (context) => const LoginScreen(),
-        "/profile": (context) => const ProfileScreen(),
+        AppRoutes.splash: (_) => const SplashScreen(),
+        AppRoutes.login: (_) => const LoginScreen(),
+        AppRoutes.profile: (_) => const ProfileScreen(),
+        AppRoutes.dashboard: (_) => const AdminDashboard(),
+
+        // ✅ TEMP: Directly assign panel route to AdminPanel class
+        '/panel': (_) => const AdminPanel(),
       },
     );
   }
@@ -87,8 +95,10 @@ Future<ThemeData> loadRemoteTheme() async {
   }
 }
 
+/// ✅ Hex color helper class
 class HexColor extends Color {
   HexColor(String hexColor) : super(_getColorFromHex(hexColor));
+
   static int _getColorFromHex(String hex) {
     hex = hex.replaceAll('#', '');
     if (hex.length == 6) {

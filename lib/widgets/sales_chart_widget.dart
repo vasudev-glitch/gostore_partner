@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class SalesChartWidget extends StatefulWidget {
-  const SalesChartWidget({super.key});
+  final DateTimeRange? dateRange;
+  const SalesChartWidget({super.key, this.dateRange});
 
   @override
   State<SalesChartWidget> createState() => _SalesChartWidgetState();
@@ -21,12 +22,16 @@ class _SalesChartWidgetState extends State<SalesChartWidget> {
   }
 
   void _loadSalesData() {
-    final now = DateTime.now();
-    final startDate = now.subtract(const Duration(days: 6)); // Last 7 days
+    final range = widget.dateRange ??
+        DateTimeRange(
+          start: DateTime.now().subtract(const Duration(days: 6)),
+          end: DateTime.now(),
+        );
 
     FirebaseFirestore.instance
         .collection('transactions')
-        .where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
+        .where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(range.start))
+        .where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(range.end))
         .snapshots()
         .listen((snapshot) {
       final dailyRevenue = <String, double>{};
@@ -44,8 +49,8 @@ class _SalesChartWidgetState extends State<SalesChartWidget> {
       }
 
       final sortedKeys = dailyRevenue.keys.toList()..sort();
-      final labels = <String>[];
       final chartSpots = <FlSpot>[];
+      final labels = <String>[];
 
       for (int i = 0; i < sortedKeys.length; i++) {
         final key = sortedKeys[i];
@@ -97,7 +102,7 @@ class _SalesChartWidgetState extends State<SalesChartWidget> {
               barWidth: 3,
               belowBarData: BarAreaData(
                 show: true,
-                color: Colors.green.withAlpha(50), // Replaces withOpacity
+                color: Colors.green.withAlpha(50),
               ),
             ),
           ],

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:gostore_partner/utils/ui_config.dart';
 
 class FraudHeatmapWidget extends StatefulWidget {
   const FraudHeatmapWidget({super.key});
@@ -43,33 +44,41 @@ class _FraudHeatmapWidgetState extends State<FraudHeatmapWidget> {
   Widget build(BuildContext context) {
     return fraudCountPerHour.isEmpty
         ? const Center(child: Text("No fraud attempts in the last 24 hours"))
-        : Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text("🚨 Real-Time Fraud Heatmap", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 10),
-        Wrap(
-          spacing: 4,
-          runSpacing: 4,
-          children: List.generate(24, (hour) {
-            final count = fraudCountPerHour[hour] ?? 0;
-            final colorIntensity = (count * 40).clamp(0, 255);
-            return Container(
-              width: 40,
-              height: 40,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 255, 0, 0).withAlpha(colorIntensity),
-                border: Border.all(color: Colors.grey.shade300),
-              ),
-              child: Text(
-                hour.toString(),
-                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              ),
-            );
-          }),
+        : Card(
+      margin: const EdgeInsets.only(top: AppSpacing.md),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("📊 Hourly Heatmap", style: AppTextStyle.headingLarge(context)),
+            const SizedBox(height: AppSpacing.sm),
+            Wrap(
+              spacing: 4,
+              runSpacing: 4,
+              children: List.generate(24, (hour) {
+                final count = fraudCountPerHour[hour] ?? 0;
+                final colorIntensity = (count * 40).clamp(0, 255);
+                return Container(
+                  width: 48,
+                  height: 48,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 255, 0, 0).withAlpha(colorIntensity),
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: Colors.grey.shade300),
+                  ),
+                  child: Text(
+                    "$hour:00",
+                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+                  ),
+                );
+              }),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

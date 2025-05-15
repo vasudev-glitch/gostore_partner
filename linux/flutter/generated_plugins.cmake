@@ -4,6 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   device_info_plus
+  file_selector_linux
   printing
 )
 

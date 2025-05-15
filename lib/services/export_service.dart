@@ -77,6 +77,31 @@ class ExportService {
     }
   }
 
+  Future<void> exportFraudLogsCsv() async {
+    final snapshot = await _firestore.collection("fraud_logs").get();
+    final now = DateTime.now();
+    final fileName = "fraud_logs_${DateFormat('yyyyMMdd_HHmmss').format(now)}.csv";
+
+    final data = snapshot.docs.map((doc) {
+      final d = doc.data();
+      return [
+        doc.id,
+        d["description"] ?? "No description",
+        (d["timestamp"] as Timestamp?)?.toDate().toIso8601String() ?? "",
+        d["resolved"] == true ? "Resolved" : "Unresolved",
+      ];
+    }).toList();
+
+    final headers = ["Fraud ID", "Description", "Timestamp", "Status"];
+    final csv = const ListToCsvConverter().convert([headers, ...data]);
+    final file = await _saveCsv(csv, fileName);
+
+    await Printing.sharePdf(
+      bytes: await file.readAsBytes(),
+      filename: fileName,
+    );
+  }
+
   Future<File> _saveCsv(String data, String filename) async {
     final dir = await getTemporaryDirectory();
     final file = File("${dir.path}/$filename");

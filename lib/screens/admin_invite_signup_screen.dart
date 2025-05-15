@@ -6,7 +6,6 @@ import 'package:gostore_partner/utils/ui_config.dart';
 
 class AdminInviteSignupScreen extends StatefulWidget {
   final String inviteToken;
-
   const AdminInviteSignupScreen({super.key, required this.inviteToken});
 
   @override
@@ -43,7 +42,14 @@ class _AdminInviteSignupScreenState extends State<AdminInviteSignupScreen> {
           .get();
 
       if (inviteDoc.docs.isEmpty) {
-        messenger.showSnackBar(const SnackBar(content: Text("Invalid or expired invite link.")));
+        messenger.showSnackBar(
+          SnackBar(
+            content: const Text("Invalid or expired invite link."),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            margin: const EdgeInsets.all(AppSpacing.md),
+          ),
+        );
         return;
       }
 
@@ -71,45 +77,60 @@ class _AdminInviteSignupScreenState extends State<AdminInviteSignupScreen> {
 
         await inviteDoc.docs.first.reference.update({"used": true});
 
-        navigator.pushReplacement(
-          MaterialPageRoute(builder: (context) => const AdminDashboard()),
-        );
+        navigator.pushReplacement(MaterialPageRoute(builder: (_) => const AdminDashboard()));
       }
     } catch (e) {
-      messenger.showSnackBar(SnackBar(content: Text("Signup failed: ${e.toString()}")));
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text("Signup failed: ${e.toString()}"),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.all(AppSpacing.md),
+        ),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Admin Registration")),
-      body: Padding(
+      appBar: AppBar(
+        title: Text("👤 Admin Registration", style: AppTextStyle.headingLarge(context)),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
         padding: AppPaddings.screen,
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                const SizedBox(height: 12),
-                _buildInput("Full Name", _nameController),
-                _buildInput("Email", _emailController, inputType: TextInputType.emailAddress),
-                _buildInput("Password", _passwordController, isPassword: true),
-                _buildInput("Phone Number", _phoneController, inputType: TextInputType.phone),
-                _buildInput("Date of Birth", _dobController),
-                _buildInput("Permanent Address", _addressController),
-                _buildInput("Father's Name", _fatherNameController),
-                _buildInput("Mother's Name", _motherNameController),
-                _buildInput("Father's Phone Number", _fatherPhoneController, inputType: TextInputType.phone),
-                _buildInput("Mother's Phone Number", _motherPhoneController, inputType: TextInputType.phone),
-                const SizedBox(height: 24),
-                ElevatedButton.icon(
-                  onPressed: _submit,
-                  icon: const Icon(Icons.app_registration),
-                  label: const Text("Complete Registration"),
-                  style: AppButtonStyles.primary,
-                ),
-              ],
+        child: Card(
+          elevation: 4,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  _buildInput("Full Name", _nameController),
+                  _buildInput("Email", _emailController, inputType: TextInputType.emailAddress),
+                  _buildInput("Password", _passwordController, isPassword: true),
+                  _buildInput("Phone Number", _phoneController, inputType: TextInputType.phone),
+                  _buildInput("Date of Birth", _dobController),
+                  _buildInput("Permanent Address", _addressController),
+                  _buildInput("Father's Name", _fatherNameController),
+                  _buildInput("Mother's Name", _motherNameController),
+                  _buildInput("Father's Phone Number", _fatherPhoneController, inputType: TextInputType.phone),
+                  _buildInput("Mother's Phone Number", _motherPhoneController, inputType: TextInputType.phone),
+                  const SizedBox(height: AppSpacing.lg),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: _submit,
+                      icon: const Icon(Icons.app_registration),
+                      label: const Text("Complete Registration"),
+                      style: AppButtonStyles.primary,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -124,12 +145,15 @@ class _AdminInviteSignupScreenState extends State<AdminInviteSignupScreen> {
         TextInputType inputType = TextInputType.text,
       }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
       child: TextFormField(
         controller: controller,
         obscureText: isPassword,
         keyboardType: inputType,
-        decoration: InputDecoration(labelText: label),
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.sm)),
+        ),
         validator: (val) => val == null || val.isEmpty ? "Enter $label" : null,
       ),
     );
