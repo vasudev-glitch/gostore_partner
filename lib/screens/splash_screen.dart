@@ -78,14 +78,9 @@ class SplashScreenState extends State<SplashScreen> with SingleTickerProviderSta
                 children: [
                   Hero(
                     tag: "gostore-logo",
-                    child: Image.network(
-                      "https://i.ibb.co/pdH9PLD/gostore-logo.png",
+                    child: Image.asset(
+                      "assets/images/gostore-logo.png",
                       width: 160,
-                      errorBuilder: (_, __, ___) => Icon(
-                        Icons.store,
-                        size: 80,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
                     ),
                   ),
                   const SizedBox(height: AppSpacing.lg),

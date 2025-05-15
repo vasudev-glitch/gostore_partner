@@ -691,7 +691,7 @@ packages:
     source: hosted
     version: "3.0.0"
   local_auth:
-    dependency: "direct overridden"
+    dependency: "direct main"
     description:
       path: "local_plugins/local_auth"
       relative: true
